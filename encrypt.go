@@ -11,8 +11,6 @@ import (
 	"errors"
 
 	"github.com/chenset/shadowsocksR-go/tools"
-	"github.com/chenset/shadowsocksR-go/tools/leakybuf"
-
 	"github.com/Yawning/chacha20"
 	"github.com/dgryski/go-camellia"
 	"github.com/dgryski/go-idea"
@@ -20,6 +18,7 @@ import (
 	"golang.org/x/crypto/blowfish"
 	"golang.org/x/crypto/cast5"
 	"golang.org/x/crypto/salsa20/salsa"
+	"log"
 )
 
 var errEmptyPassword = errors.New("empty key")
@@ -113,12 +112,16 @@ func (c *salsaStreamCipher) XORKeyStream(dst, src []byte) {
 	var buf []byte
 	padLen := c.counter % 64
 	dataSize := len(src) + padLen
+
+	log.Println(dataSize)
+
 	if cap(dst) >= dataSize {
 		buf = dst[:dataSize]
-	} else if leakybuf.GlobalLeakyBufSize >= dataSize {
-		buf = leakybuf.GlobalLeakyBuf.Get()
-		defer leakybuf.GlobalLeakyBuf.Put(buf)
-		buf = buf[:dataSize]
+		//todo
+		//} else if leakybuf.GlobalLeakyBufSize >= dataSize {
+		//	buf = leakybuf.GlobalLeakyBuf.Get()
+		//	defer leakybuf.GlobalLeakyBuf.Put(buf)
+		//	buf = buf[:dataSize]
 	} else {
 		buf = make([]byte, dataSize)
 	}

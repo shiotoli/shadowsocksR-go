@@ -8,7 +8,6 @@ import (
 
 	"github.com/chenset/shadowsocksR-go/obfs"
 	"github.com/chenset/shadowsocksR-go/protocol"
-	"github.com/chenset/shadowsocksR-go/tools/leakybuf"
 )
 
 // SSTCPConn the struct that override the net.Conn methods
@@ -32,18 +31,16 @@ func NewSSTCPConn(c net.Conn, cipher *StreamCipher) *SSTCPConn {
 	return &SSTCPConn{
 		Conn:           c,
 		StreamCipher:   cipher,
-		readBuf:        leakybuf.GlobalLeakyBuf.Get(),
+		//readBuf:        leakybuf.GlobalLeakyBuf.Get(), //todo
 		readDecodeBuf:  bytes.NewBuffer(nil),
 		readIObfsBuf:   bytes.NewBuffer(nil),
 		readUserBuf:    bytes.NewBuffer(nil),
 		readEncryptBuf: bytes.NewBuffer(nil),
-		writeBuf:       leakybuf.GlobalLeakyBuf.Get(),
+		//writeBuf:       leakybuf.GlobalLeakyBuf.Get(),//todo
 	}
 }
 
 func (c *SSTCPConn) Close() error {
-	leakybuf.GlobalLeakyBuf.Put(c.readBuf)
-	leakybuf.GlobalLeakyBuf.Put(c.writeBuf)
 	return c.Conn.Close()
 }
 
