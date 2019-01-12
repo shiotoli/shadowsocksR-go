@@ -94,7 +94,7 @@ func (c *SSTCPConn) doRead(b []byte) (n int, err error) {
 	if (decodelength == 0 || c.readEncryptBuf.Len() > 0 || (c.readIndex != 0 && c.readIndex > uint64(decodelength))) && c.lastReadError == nil {
 		c.readIndex = 0
 
-		connReadBuf := make([]byte, 1024)
+		connReadBuf := make([]byte, 2048)
 		n, c.lastReadError = c.Conn.Read(connReadBuf)
 		//写入decode 缓存
 		c.readDecodeBuf.Write(connReadBuf[:n])
