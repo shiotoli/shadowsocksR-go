@@ -17,13 +17,11 @@ type SSTCPConn struct {
 	*StreamCipher
 	IObfs          obfs.IObfs
 	IProtocol      protocol.IProtocol
-	readBuf        []byte
 	readDecodeBuf  *bytes.Buffer
 	readIObfsBuf   *bytes.Buffer
 	readEncryptBuf *bytes.Buffer
 	readIndex      uint64
 	readUserBuf    *bytes.Buffer
-	writeBuf       []byte
 	lastReadError  error
 }
 
@@ -31,12 +29,10 @@ func NewSSTCPConn(c net.Conn, cipher *StreamCipher) *SSTCPConn {
 	return &SSTCPConn{
 		Conn:           c,
 		StreamCipher:   cipher,
-		//readBuf:        leakybuf.GlobalLeakyBuf.Get(), //todo
 		readDecodeBuf:  bytes.NewBuffer(nil),
 		readIObfsBuf:   bytes.NewBuffer(nil),
 		readUserBuf:    bytes.NewBuffer(nil),
 		readEncryptBuf: bytes.NewBuffer(nil),
-		//writeBuf:       leakybuf.GlobalLeakyBuf.Get(),//todo
 	}
 }
 
@@ -97,9 +93,11 @@ func (c *SSTCPConn) doRead(b []byte) (n int, err error) {
 	decodelength := c.readDecodeBuf.Len()
 	if (decodelength == 0 || c.readEncryptBuf.Len() > 0 || (c.readIndex != 0 && c.readIndex > uint64(decodelength))) && c.lastReadError == nil {
 		c.readIndex = 0
-		n, c.lastReadError = c.Conn.Read(c.readBuf)
+
+		connReadBuf := make([]byte, 1024)
+		n, c.lastReadError = c.Conn.Read(connReadBuf)
 		//写入decode 缓存
-		c.readDecodeBuf.Write(c.readBuf[0:n])
+		c.readDecodeBuf.Write(connReadBuf[:n])
 	}
 	//无缓冲数据返回错误
 	if c.lastReadError != nil && (decodelength == 0 || uint64(decodelength) < c.readIndex) {
@@ -219,14 +217,7 @@ func (c *SSTCPConn) preWrite(b []byte) (outData []byte, err error) {
 	//	", pre encrypted data:", preEncryptedData,
 	//	", encrypted data length:", preEncryptedDataLen)
 
-	cipherData := c.writeBuf
-	dataSize := len(encryptedData) + len(iv)
-	if dataSize > len(cipherData) {
-		cipherData = make([]byte, dataSize)
-	} else {
-		cipherData = cipherData[:dataSize]
-	}
-
+	cipherData := make([]byte, len(encryptedData)+len(iv))
 	if iv != nil {
 		// Put initialization vector in buffer before be encoded
 		copy(cipherData, iv)
