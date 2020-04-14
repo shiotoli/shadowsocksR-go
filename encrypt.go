@@ -11,7 +11,7 @@ import (
 	"errors"
 
 	"github.com/chenset/shadowsocksR-go/tools"
-	"github.com/Yawning/chacha20"
+	"github.com/shiotoli/chacha20"
 	"github.com/dgryski/go-camellia"
 	"github.com/dgryski/go-idea"
 	"github.com/dgryski/go-rc2"
