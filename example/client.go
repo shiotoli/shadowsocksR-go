@@ -9,14 +9,14 @@ import (
 	"net/url"
 	"fmt"
 	"io"
-	"github.com/chenset/shadowsocksR-go"
+	"github.com/shiotoli/shadowsocksR-go"
 	"errors"
 	"strings"
 	"strconv"
-	"github.com/chenset/shadowsocksR-go/obfs"
-	"github.com/chenset/shadowsocksR-go/ssr"
-	"github.com/chenset/shadowsocksR-go/tools/socks"
-	"github.com/chenset/shadowsocksR-go/protocol"
+	"github.com/shiotoli/shadowsocksR-go/obfs"
+	"github.com/shiotoli/shadowsocksR-go/ssr"
+	"github.com/shiotoli/shadowsocksR-go/tools/socks"
+	"github.com/shiotoli/shadowsocksR-go/protocol"
 )
 
 var (

@@ -10,7 +10,7 @@ import (
 	"encoding/binary"
 	"errors"
 
-	"github.com/chenset/shadowsocksR-go/tools"
+	"github.com/shiotoli/shadowsocksR-go/tools"
 	"github.com/shiotoli/chacha20"
 	"github.com/dgryski/go-camellia"
 	"github.com/dgryski/go-idea"

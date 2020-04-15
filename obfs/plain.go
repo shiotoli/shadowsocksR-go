@@ -1,7 +1,7 @@
 package obfs
 
 import (
-	"github.com/chenset/shadowsocksR-go/ssr"
+	"github.com/shiotoli/shadowsocksR-go/ssr"
 )
 
 func init() {

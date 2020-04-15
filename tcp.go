@@ -6,8 +6,8 @@ import (
 	"net"
 	"sync"
 
-	"github.com/chenset/shadowsocksR-go/obfs"
-	"github.com/chenset/shadowsocksR-go/protocol"
+	"github.com/shiotoli/shadowsocksR-go/obfs"
+	"github.com/shiotoli/shadowsocksR-go/protocol"
 )
 
 // SSTCPConn the struct that override the net.Conn methods
